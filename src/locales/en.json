@@ -1,4 +1,5 @@
 {
-  "welcome": "Welcome to our application!",
-  "goodbye": "Goodbye and have a great day!"
+  "header": {
+    "logoAlt": "Logo of Worklife"
+  }
 }
