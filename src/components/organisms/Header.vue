@@ -13,9 +13,9 @@ const { t } = useI18n()
 
 
   <header>
-    <Image :alt="t('header.logoAlt')" :src="workLifeHeaderLogo" width="100px" />
+    <Image object-fit="contain" :alt="t('header.logoAlt')" :src="workLifeHeaderLogo" width="100px" />
     <Text align="center">
-      Front-end Technical Test
+      {{ t('header.title') }}
     </Text>
   </header>
 </template>

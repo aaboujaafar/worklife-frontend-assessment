@@ -17,11 +17,7 @@ defineProps({
   tilePerRow: {
     type: Number,
     default: 3,
-  },
-  nbOfRows: {
-    type: Number,
-    default: 3,
-  },
+  }
 })
 </script>
 
@@ -37,7 +33,7 @@ defineProps({
       v-for="item in items"
       :key="item.id"
       :id="item.id"
-      :imageSrc="item.imageSrc"
+      :imageSrc="item.imageUrl"
       :title="item.title"
       :description="item.description"
     />

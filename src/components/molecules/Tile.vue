@@ -4,7 +4,7 @@ import Text from '@/components/atoms/Text.vue'
 
 defineProps({
   id: {
-    type: Number,
+    type: String,
     required: true,
   },
   imageSrc: {
@@ -24,7 +24,7 @@ defineProps({
 
 <template>
   <div class="tile">
-    <Image class="hover-target" src="https://placehold.co/100" alt="Tile Image" />
+    <Image class="hover-target" :src="imageSrc" alt="Tile Image" />
     <div class="tile-info">
       <Text color="secondary" size="small" :max-lines="2">
         {{ title }}
@@ -36,8 +36,7 @@ defineProps({
 <style scoped lang="scss">
 .tile {
   position: relative;
-  width: 150px;
-  height: 150px;
+  aspect-ratio: 1;
 
   .tile-info {
     position: absolute;

@@ -1,5 +1,23 @@
 {
   "header": {
-    "logoAlt": "Logo of Worklife"
+    "logoAlt": "Logo of Worklife",
+    "title": "Art Gallery - Frontend Tech Test"
+  },
+  "search": {
+    "placeholder": "Search for paintings, artists, or styles",
+    "button": {
+      "label": "Search"
+    }
+  },
+  "noResults": "No results found",
+  "loader": {
+    "loading": "Loading...",
+    "error": "Error loading data"
+  },
+  "home": {
+    "description": "Explore the world of art and creativity",
+    "loadingTiles": "Loading art...",
+    "loadMore": "Load more art",
+    "noTiles": "No art available"
   }
 }

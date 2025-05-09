@@ -16,6 +16,10 @@ defineProps({
     type: String,
     default: '100%',
   },
+  objectFit: {
+    type: String,
+    default: 'cover',
+  },
 })
 </script>
 
@@ -25,7 +29,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .image {
-  background-size: contain;
+  background-size: v-bind(objectFit);
   background-position: center;
   width: v-bind(width);
   height: v-bind(height);
