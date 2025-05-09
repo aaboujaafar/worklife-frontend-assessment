@@ -1,5 +1,7 @@
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   icon: {
     type: String,
     required: true,
@@ -13,10 +15,17 @@ defineProps({
     default: 'black',
   },
 })
+const classes = computed(() => {
+  return {
+    [`icon-${props.size}`]: true,
+    [`icon-${props.color}`]: props.color !== '',
+    [`pi-${props.icon}`]: props.icon !== '',
+  }
+})
 </script>
 
 <template>
-  <i class="pi" :class="`pi-${icon} icon-${size} icon-${color}`"></i>
+  <i class="pi" :class="classes"></i>
 </template>
 
 <style lang="scss" scoped>

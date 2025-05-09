@@ -8,12 +8,13 @@ defineProps({
 </script>
 
 <template>
-  <button class="btn" type="button">
+  <button class="btn" type="button" >
     <slot></slot>
   </button>
 </template>
 
 <style lang="scss" scoped>
+
 .btn {
   background-color: $color-primary;
   color: $color-accent;
@@ -21,9 +22,17 @@ defineProps({
   border: none;
   cursor: pointer;
   padding: $padding-btn;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $padding-small;
+  width: 100%;
 
   &:hover {
-    background-color: $color-secondary;
+    background-color: $color-neutral;
+    border: solid 1px $color-primary;
+    color: $color-primary;
+    cursor: pointer;
   }
 
   &:disabled {

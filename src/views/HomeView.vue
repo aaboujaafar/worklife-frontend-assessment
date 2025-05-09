@@ -1,141 +1,83 @@
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import SearchInput from '@/components/organisms/SearchInput.vue'
 import TileGroup from '@/components/organisms/TileGroup.vue'
-import Button from '@/components/atoms/Button.vue'
+import { getNCollections } from '@/services/collections.js'
+import Loader from '@/components/molecules/Loader.vue'
+import Button from '@/components/molecules/Button.vue'
+import { useI18n } from 'vue-i18n'
+import { searchWithQuery } from '@/services/search.js'
+import Text from '@/components/atoms/Text.vue'
 
+const tiles = ref([])
+const resultPage = ref(1)
+const loading = ref(true)
+const searchTerm = ref("")
 
-const tiles = ref([
-  {
-    id: 1,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 1',
-    description: 'Description for Tile 1'
-  },
-  {
-    id: 2,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 2',
-    description: 'Description for Tile 2'
-  },
-  {
-    id: 3,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 3',
-    description: 'Description for Tile 3'
-  },
-  {
-    id: 4,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 4',
-    description: 'Description for Tile 4'
-  },
-  {
-    id: 5,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 5',
-    description: 'Description for Tile 5'
-  },
-  {
-    id: 6,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 6',
-    description: 'Description for Tile 6'
-  },
-  {
-    id: 7,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 7',
-    description: 'Description for Tile 7'
-  },
-  {
-    id: 8,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 8',
-    description: 'Description for Tile 8'
-  },
-  {
-    id: 9,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 9',
-    description: 'Description for Tile 9'
-  },
-  {
-    id: 10,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 10',
-    description: 'Description for Tile 10'
-  },
-  {
-    id: 11,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 11',
-    description: 'Description for Tile 11'
-  },
-  {
-    id: 12,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 9',
-    description: 'Description for Tile 9'
-  },
-  {
-    id: 13,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 10',
-    description: 'Description for Tile 10'
-  },
-  {
-    id: 14,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 11',
-    description: 'Description for Tile 11'
-  },
-  {
-    id: 15,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 9',
-    description: 'Description for Tile 9'
-  },
-  {
-    id: 16,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 10',
-    description: 'Description for Tile 10'
-  },
-  {
-    id: 17,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 11',
-    description: 'Description for Tile 11'
-  },
-  {
-    id: 18,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 11',
-    description: 'Description for Tile 11'
-  },
-  {
-    id: 19,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 11',
-    description: 'Description for Tile 11'
-  },
-  {
-    id: 20,
-    imageSrc: 'https://via.placeholder.com/150',
-    title: 'Tile 11',
-    description: 'Description for Tile 11'
+const { t } = useI18n()
+
+onMounted(() => {
+  loadTiles()
+    .then(() => {
+      loading.value = false
+    })
+    .catch(() => {
+      loading.value = false
+    })
+})
+
+const loadTiles = async () => {
+  try {
+    let data
+    if(searchTerm.value !== "") {
+      data = await searchWithQuery(searchTerm.value, resultPage.value)
+    }else{
+      data = await getNCollections(20, resultPage.value)
+    }
+
+    const collectionsTiles = data.artObjects.map((artObject) => ({
+      id: artObject.id,
+      title: artObject.longTitle,
+      imageUrl: artObject.webImage.url,
+    }))
+    console.log('collectionsTiles', data)
+    tiles.value.push(...collectionsTiles)
+    resultPage.value += 1
+  } catch (error) {
+    console.error('Error fetching more collections:', error)
   }
+}
 
-])
+const handleSearchClick = async (searchQuery) => {
 
+  try {
+    searchTerm.value = searchQuery
+    loading.value = true
+    resultPage.value = 1
+    tiles.value = []
+    const data = await searchWithQuery(searchTerm.value, resultPage.value)
+    tiles.value = data.artObjects.map((artObject) => ({
+      id: artObject.id,
+      title: artObject.longTitle,
+      imageUrl: artObject.webImage.url,
+    }))
+  } catch (error) {
+    console.error('Error handling search click:', error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
   <div class="container">
-    <SearchInput />
-    <TileGroup :items="tiles" :tilePerRow="4" :nb-of-rows="5" tileGap="10px" />
-    <Button>Load more</Button>
+    <SearchInput @searchedItems="handleSearchClick($event)" />
+    <Loader v-if="loading" :label="t('home.loadingTiles')" />
+    <Text v-else-if="tiles.length === 0" align="center" class="w-full text-center">
+      {{ t('home.noTiles') }}
+    </Text>
+    <TileGroup :items="tiles" :tilePerRow="5" tileGap="10px" />
+    <Button class="w-full" @click="loadTiles" icon="plus">{{ t("home.loadMore") }}</Button>
   </div>
 </template>
 
@@ -146,6 +88,8 @@ const tiles = ref([
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-gap: $padding-small;
-
+}
+.w-full {
+  width: 100%;
 }
 </style>
