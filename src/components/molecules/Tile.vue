@@ -26,7 +26,7 @@ defineProps({
   <div class="tile">
     <Image class="hover-target" :src="imageSrc" alt="Tile Image" />
     <div class="tile-info">
-      <Text color="secondary" size="small" :max-lines="2">
+      <Text color="secondary" size="small" :max-lines="3">
         {{ title }}
       </Text>
     </div>
